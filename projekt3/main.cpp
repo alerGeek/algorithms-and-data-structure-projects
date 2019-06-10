@@ -57,13 +57,8 @@ int oblicz_gotowke_w_banku(bankomat *bankomat) {
 }
 
 void wyswietl_bankomat(bankomat *bankomat) {
-    cout << "ID:" << bankomat->id << " "
-         << "LOKALIZACJA_ID: " << bankomat->lokalizacja_id << ", "
-         << "MIASTO: " << bankomat->miasto << ", "
-         << "AKTYWNY: " << bankomat->czy_aktywny << ", "
-         << "SUMA: " << bankomat->suma_gotowki << ", "
-         << "IL. 10: " << bankomat->ilosc_10
-         << endl;
+    cout << "id: " << bankomat->id << "\t aktywny: " << bankomat->czy_aktywny
+         << "\t suma:" << bankomat->suma_gotowki << "\t il. 10: " << bankomat->ilosc_10 << endl;
 }
 
 //lista dwukierunkowa - metody glowne
@@ -315,7 +310,7 @@ void utworz_nowy_bankomat(lista &lista, bankomat *bankomat) {
     while (cin.fail()) {
         cin.clear();
         cin.ignore();
-        cout << "Nieprawidłowe id lokalizacji." << endl;
+        cout << "Nieprawidlowe id lokalizacji." << endl;
         cin >> bankomat->lokalizacja_id;
     }
 
@@ -327,11 +322,11 @@ void utworz_nowy_bankomat(lista &lista, bankomat *bankomat) {
     while (cin.fail()) {
         cin.clear();
         cin.ignore();
-        cout << "Wpisz 0 albo 1." << endl;
+        cout << "Wpisz 0 -niekatywny albo 1 - aktywny." << endl;
         cin >> bankomat->czy_aktywny;
     }
 
-    cout << "Podaj ilość 10 w bankomacie" << endl;
+    cout << "Podaj ilosc 10 w bankomacie" << endl;
     cin >> bankomat->ilosc_10;
     while (cin.fail()) {
         cin.clear();
@@ -340,7 +335,7 @@ void utworz_nowy_bankomat(lista &lista, bankomat *bankomat) {
         cin >> bankomat->ilosc_10;
     }
 
-    cout << "Podaj ilość 20 w bankomacie" << endl;
+    cout << "Podaj ilosc 20 w bankomacie" << endl;
     cin >> bankomat->ilosc_20;
     while (cin.fail()) {
         cin.clear();
@@ -349,7 +344,7 @@ void utworz_nowy_bankomat(lista &lista, bankomat *bankomat) {
         cin >> bankomat->ilosc_20;
     }
 
-    cout << "Podaj ilość 50 w bankomacie" << endl;
+    cout << "Podaj ilosc 50 w bankomacie" << endl;
     cin >> bankomat->ilosc_50;
     while (cin.fail()) {
         cin.clear();
@@ -358,7 +353,7 @@ void utworz_nowy_bankomat(lista &lista, bankomat *bankomat) {
         cin >> bankomat->ilosc_50;
     }
 
-    cout << "Podaj ilość 100 w bankomacie" << endl;
+    cout << "Podaj ilosc 100 w bankomacie" << endl;
     cin >> bankomat->ilosc_100;
     while (cin.fail()) {
         cin.clear();
@@ -367,7 +362,7 @@ void utworz_nowy_bankomat(lista &lista, bankomat *bankomat) {
         cin >> bankomat->ilosc_100;
     }
 
-    cout << "Podaj ilość 200 w bankomacie" << endl;
+    cout << "Podaj ilosc 200 w bankomacie" << endl;
     cin >> bankomat->ilosc_200;
     while (cin.fail()) {
         cin.clear();
@@ -407,10 +402,10 @@ void usun_po_id(lista &lista, string bankomat_id) {
         }
         temp = temp->next;
     }
-    cout << "Podany numer id bankomatu nie istnieje, nie da sie usunac." << endl;
+    cout << "numer id bankomatu nie istnieje, nie da sie usunac." << endl;
 }
 
-void wyswietl_poczatek(lista lista) {
+void wyswietl_od_poczatek(lista lista) {
     while (lista.head != nullptr) {
         wyswietl_bankomat(lista.head->bankomat);
         lista.head = lista.head->next;
@@ -434,7 +429,7 @@ void usun_gdy_malo_10(lista_jedno &lista_jedno) {
 
     while (lista_jedno.head != nullptr) {
         bankomat *bankomat = lista_jedno.head->bankomat;
-        if (bankomat->ilosc_10 > 100) {
+        if (lista_jedno.head->bankomat->ilosc_10 >= 100) {
             dodaj_1K(lista_spelnia_ilosc, bankomat);
         }
         usun_1K(lista_jedno);
@@ -447,13 +442,13 @@ void usun_gdy_malo_10(lista_jedno &lista_jedno) {
 void zadanie1(lista &lista) {
 
     int menu = -1;
-    wyswietl_poczatek(lista);
+    wyswietl_od_poczatek(lista);
 
     do {
         cout << endl;
         cout << "Zadanie 1 - opcje\n"
              << "\t1 - dodaj nowy bankomat\n"
-             << "\t2 - wyświetl baze bankomatow\n"
+             << "\t2 - wyswietl baze bankomatow\n"
              << "\t3 - wyjscie z zadania 1" << endl;
 
         cin >> menu;
@@ -483,7 +478,7 @@ void zadanie1(lista &lista) {
             }
                 break;
             case 2:
-                wyswietl_poczatek(lista);
+                wyswietl_od_poczatek(lista);
                 break;
             case 3:
                 return;
@@ -494,14 +489,14 @@ void zadanie1(lista &lista) {
 void zadanie2(lista &lista) {
 
     usun_nieaktywne(lista);
-    wyswietl_poczatek(lista);
+    wyswietl_od_poczatek(lista);
 
     string id;
     int menu;
 
     do {
         cout << endl;
-        cout << "Zadanie 2 - opcje\n"
+        cout << "Zadanie 2 - opcje:\n"
              << "\t1 - usun bankomat po id\n"
              << "\t2 - wyswietl baze bankomatow\n"
              << "\t3 - wyjscie z zadania" << endl;
@@ -516,7 +511,7 @@ void zadanie2(lista &lista) {
             }
                 break;
             case 2:
-                wyswietl_poczatek(lista);
+                wyswietl_od_poczatek(lista);
                 break;
             case 3:
                 return;
@@ -529,7 +524,7 @@ void zadanie3(lista lista, lista_jedno &lista_jedno, int srednia_wyplacana) {
 
     do {
         cout << endl;
-        cout << "Zadanie 3 - opcje\n"
+        cout << "Zadanie 3 - opcje:\n"
              << "\t1 - utworz liste zdolnych do wyplaty\n"
              << "\t2 - usun bankomaty, gdzie liczba bankotu 10 jest mniejsza niz 100\n"
              << "\t3 - wyjscie z zadania 3" << endl;
