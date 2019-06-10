@@ -58,14 +58,11 @@ int oblicz_gotowke_w_banku(bankomat *bankomat) {
 
 void wyswietl_bankomat(bankomat *bankomat) {
     cout << "ID:" << bankomat->id << " "
-         << "LOKALIZACJA_ID: " << bankomat->lokalizacja_id << " "
-         << "MIASTO: " << bankomat->miasto << " "
-         << "AKTYWNY: " << bankomat->czy_aktywny << " "
-         //         << "IL. 10: " << bankomat->ilosc_10 << " "
-         //         << "IL. 20: " << bankomat->ilosc_20 << " "
-         //         << "IL. 50: " << bankomat->ilosc_50 << " "
-         //         << "IL. 100: " << bankomat->ilosc_100 << " "
-         //         << "IL. 200: " << bankomat->ilosc_200
+         << "LOKALIZACJA_ID: " << bankomat->lokalizacja_id << ", "
+         << "MIASTO: " << bankomat->miasto << ", "
+         << "AKTYWNY: " << bankomat->czy_aktywny << ", "
+         << "SUMA: " << bankomat->suma_gotowki << ", "
+         << "IL. 10: " << bankomat->ilosc_10
          << endl;
 }
 
