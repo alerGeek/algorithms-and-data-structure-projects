@@ -204,6 +204,70 @@ void wyswietl_nazwe_regionu(string &region, int i) {
     cout << region << endl;
 }
 
+int przypiszIloscNominalowDoTymczasowej(bankomat *tab, int &nrBankWReg, int nominal) {
+    int temp_iloscNominalowWDanymBanku;
+    switch (nominal) {
+        case 200:
+            temp_iloscNominalowWDanymBanku = tab[nrBankWReg].ilosc_200;
+            break;
+        case 100:
+            temp_iloscNominalowWDanymBanku = tab[nrBankWReg].ilosc_100;
+            break;
+        case 50:
+            temp_iloscNominalowWDanymBanku = tab[nrBankWReg].ilosc_50;
+            break;
+        case 20:
+            temp_iloscNominalowWDanymBanku = tab[nrBankWReg].ilosc_20;
+            break;
+        case 10:
+            temp_iloscNominalowWDanymBanku = tab[nrBankWReg].ilosc_10;
+            break;
+    }
+    return temp_iloscNominalowWDanymBanku;
+}
+
+int pobierz_max_liczbe_danego_nominalu(bankomat *tab, int &nrBankWReg,
+                                       int &liczba_nominalow, int nominal, int &do_wyplaty) {
+
+    int temp_iloscNominaluWDanymBanku = przypiszIloscNominalowDoTymczasowej(tab, nrBankWReg, nominal);
+
+    while (temp_iloscNominaluWDanymBanku > 0 && tab[nrBankWReg].kwota_wyplacona + nominal <= do_wyplaty) {
+        tab[nrBankWReg].ilosc_200 -= 1;
+        switch (nominal) {
+            case 200:
+                tab[nrBankWReg].ilosc_200 -= 1;
+                temp_iloscNominaluWDanymBanku = tab[nrBankWReg].ilosc_200;
+                break;
+            case 100:
+                tab[nrBankWReg].ilosc_100 -= 1;
+                temp_iloscNominaluWDanymBanku = tab[nrBankWReg].ilosc_100;
+                break;
+            case 50:
+                tab[nrBankWReg].ilosc_50 -= 1;
+                temp_iloscNominaluWDanymBanku = tab[nrBankWReg].ilosc_50;
+                break;
+            case 20:
+                tab[nrBankWReg].ilosc_20 -= 1;
+                temp_iloscNominaluWDanymBanku = tab[nrBankWReg].ilosc_20;
+                break;
+            case 10:
+                tab[nrBankWReg].ilosc_10 -= 1;
+                temp_iloscNominaluWDanymBanku = tab[nrBankWReg].ilosc_10;
+                break;
+        }
+
+        liczba_nominalow++;
+        tab[nrBankWReg].kwota_wyplacona += nominal;
+    }
+    return liczba_nominalow;
+}
+
+void wyswietlKombinacje(int liczbaNominalow, int nominal) {
+    if (liczbaNominalow > 0) {
+        cout << liczbaNominalow << " x " << nominal << ", ";
+    }
+}
+
 void zadanie1(bankomat *tab, int ilosc_bankow, region *reg) {
     string region;
     int max_region = 0;
@@ -256,11 +320,11 @@ void zadanie2(bankomat *tab, int ilosc_bankow, int &pierwszy_aktywny, region *re
 
 void zadanie3(bankomat *tab, int srednia_wyplacana, region *reg) {
 
-    int temp_liczba_nominalow10;
-    int temp_liczba_nominalow20;
-    int temp_liczba_nominalow50;
-    int temp_liczba_nominalow100;
-    int temp_liczba_nominalow200;
+    int temp_liczba_10;
+    int temp_liczba_20;
+    int temp_liczba_50;
+    int temp_liczba_100;
+    int temp_liczba_200;
 
     int temp_czy_wyda;
     string region;
@@ -270,64 +334,39 @@ void zadanie3(bankomat *tab, int srednia_wyplacana, region *reg) {
         wyswietl_nazwe_regionu(region, nrReg);
 
         for (int nrBankWReg = reg[nrReg].pierwszy_indeks; nrBankWReg < reg[nrReg].ost_indeks + 1; nrBankWReg++) {
-            int do_wyplaty = srednia_wyplacana * 100;
+            int do_wyplacenia = srednia_wyplacana * 100;
             temp_czy_wyda = 0;
 
-            temp_liczba_nominalow10 = 0;
-            temp_liczba_nominalow20 = 0;
-            temp_liczba_nominalow50 = 0;
-            temp_liczba_nominalow100 = 0;
-            temp_liczba_nominalow200 = 0;
+            temp_liczba_10 = 0;
+            temp_liczba_20 = 0;
+            temp_liczba_50 = 0;
+            temp_liczba_100 = 0;
+            temp_liczba_200 = 0;
 
-            while (tab[nrBankWReg].kwota_wyplacona <= do_wyplaty && temp_czy_wyda == 0) {
-                while (tab[nrBankWReg].ilosc_200 > 0 && tab[nrBankWReg].kwota_wyplacona + 200 <= do_wyplaty) {
-                    tab[nrBankWReg].ilosc_200 -= 1;
-                    temp_liczba_nominalow200++;
-                    tab[nrBankWReg].kwota_wyplacona += 200;
-                }
-                while (tab[nrBankWReg].ilosc_100 > 0 && tab[nrBankWReg].kwota_wyplacona + 100 <= do_wyplaty) {
-                    tab[nrBankWReg].ilosc_100 -= 1;
-                    temp_liczba_nominalow100++;
-                    tab[nrBankWReg].kwota_wyplacona += 100;
-                }
-                while (tab[nrBankWReg].ilosc_50 > 0 && tab[nrBankWReg].kwota_wyplacona + 50 <= do_wyplaty) {
-                    tab[nrBankWReg].ilosc_50 -= 1;
-                    temp_liczba_nominalow50++;
-                    tab[nrBankWReg].kwota_wyplacona += 50;
-                }
-                while (tab[nrBankWReg].ilosc_20 > 0 && tab[nrBankWReg].kwota_wyplacona + 20 <= do_wyplaty) {
-                    tab[nrBankWReg].ilosc_20 -= 1;
-                    temp_liczba_nominalow20++;
-                    tab[nrBankWReg].kwota_wyplacona += 20;
-                }
-                while (tab[nrBankWReg].ilosc_10 > 0 && tab[nrBankWReg].kwota_wyplacona + 10 <= do_wyplaty) {
-                    tab[nrBankWReg].ilosc_10 -= 1;
-                    temp_liczba_nominalow10++;
-                    tab[nrBankWReg].kwota_wyplacona += 10;
-                }
-                if (tab[nrBankWReg].kwota_wyplacona == do_wyplaty) {
+            while (tab[nrBankWReg].kwota_wyplacona <= do_wyplacenia && temp_czy_wyda == 0) {
+                temp_liczba_200 = pobierz_max_liczbe_danego_nominalu(tab, nrBankWReg,
+                                                                     temp_liczba_200, 200, do_wyplacenia);
+                temp_liczba_100 = pobierz_max_liczbe_danego_nominalu(tab, nrBankWReg,
+                                                                     temp_liczba_100, 100, do_wyplacenia);
+                temp_liczba_50 = pobierz_max_liczbe_danego_nominalu(tab, nrBankWReg,
+                                                                    temp_liczba_50, 50, do_wyplacenia);
+                temp_liczba_20 = pobierz_max_liczbe_danego_nominalu(tab, nrBankWReg,
+                                                                    temp_liczba_20, 20, do_wyplacenia);
+                temp_liczba_10 = pobierz_max_liczbe_danego_nominalu(tab, nrBankWReg,
+                                                                    temp_liczba_10, 10, do_wyplacenia);
+
+                if (tab[nrBankWReg].kwota_wyplacona == do_wyplacenia) {
                     temp_czy_wyda = 1;
                     reg[nrReg].czy_jakis_wyda = 1;
-                    cout << tab[nrBankWReg].id << " w "
-                         << tab[nrBankWReg].miasto
+                    cout << tab[nrBankWReg].id
+                         << " w " << tab[nrBankWReg].miasto
                          << ": ";
 
-                    if (temp_liczba_nominalow200 > 0) {
-                        cout << temp_liczba_nominalow200 << " x " << 200 << ", ";
-                    }
-                    if (temp_liczba_nominalow100 > 0) {
-                        cout << temp_liczba_nominalow100 << " x " << 100 << ", ";
-                    }
-                    if (temp_liczba_nominalow50 > 0) {
-                        cout << temp_liczba_nominalow50 << " x " << 50 << ", ";
-                    }
-                    if (temp_liczba_nominalow20 > 0) {
-                        cout << temp_liczba_nominalow20 << " x " << 20 << ", ";
-                    }
-
-                    if (temp_liczba_nominalow10 > 0) {
-                        cout << temp_liczba_nominalow10 << " x " << 10;
-                    }
+                    wyswietlKombinacje(temp_liczba_200, 200);
+                    wyswietlKombinacje(temp_liczba_100, 100);
+                    wyswietlKombinacje(temp_liczba_50, 50);
+                    wyswietlKombinacje(temp_liczba_20, 20);
+                    wyswietlKombinacje(temp_liczba_10, 10);
                     cout << endl;
                 } else {
                     temp_czy_wyda = -1;
